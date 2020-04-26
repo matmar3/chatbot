@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--Watson Assistant service credentials-->
+    <!-- REPLACE `ASSISTANT_ID_HERE` with ID of the Assistant to use -->
+    <string name="assistant_id">5fc9a101-5e1b-4bd1-bd04-67f02deea67a</string>
+
+    <!-- REPLACE `ASSISTANT_API_KEY_HERE` with Watson Assistant service API Key-->
+    <string name="assistant_apikey">Cq7-FtSYUkjHvZLnP7GQsjOkOmViVZ8k32NPHsCpRNVb</string>
+
+    <!-- The URL provided below is for DALLAS region/location -->
+    <!-- If the Assistant service is created in another region/lpcation -->
+    <!-- REPLACE the URL with the one provided in the credentials of the service you created-->
+    <string name="assistant_url">https://api.eu-gb.assistant.watson.cloud.ibm.com</string>
+
+</resources>
