@@ -10,6 +10,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.sufficientlysecure.htmltextview.HtmlHttpImageGetter;
+import org.sufficientlysecure.htmltextview.HtmlTextView;
+
 import java.util.ArrayList;
 
 
@@ -60,11 +63,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         Message message = messageArrayList.get(position);
 
         if (message.getMessage().startsWith("<html>")) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                ((ViewHolder) holder).message.setText(Html.fromHtml(message.getMessage(), Html.FROM_HTML_MODE_COMPACT));
-            } else {
-                ((ViewHolder) holder).message.setText(Html.fromHtml(message.getMessage()));
-            }
+            ((ViewHolder) holder).message.setHtml(message.getMessage(), new HtmlHttpImageGetter(((ViewHolder) holder).message));
         }
         else {
             ((ViewHolder) holder).message.setText(message.getMessage());
@@ -77,13 +76,11 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView message;
-        ImageView image;
+        HtmlTextView message;
 
         ViewHolder(View view) {
             super(view);
             message = itemView.findViewById(R.id.message);
-            image = itemView.findViewById(R.id.image);
         }
     }
 
