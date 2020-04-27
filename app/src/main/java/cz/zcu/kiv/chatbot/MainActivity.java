@@ -125,18 +125,7 @@ public class MainActivity extends AppCompatActivity {
     private void sendMessage() {
 
         final String inputValue = this.inputMessage.getText().toString().trim();
-        if (!this.initialRequest) {
-            Message inputMessage = new Message();
-            inputMessage.setMessage(inputValue);
-            inputMessage.setId(MessageOwner.CLIENT.getUserID());
-            messageArrayList.add(inputMessage);
-        } else {
-            Message inputMessage = new Message();
-            inputMessage.setMessage(inputValue);
-            inputMessage.setId(MessageOwner.NONE.getUserID());
-            this.initialRequest = false;
-            Toast.makeText(getApplicationContext(), "Tap on the message for Voice", Toast.LENGTH_LONG).show();
-        }
+        logMessage(inputValue);
 
         this.inputMessage.setText("");
         mAdapter.notifyDataSetChanged();
@@ -165,7 +154,6 @@ public class MainActivity extends AppCompatActivity {
 
                             }
                         });
-
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -189,6 +177,19 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "No Internet Connection available ", Toast.LENGTH_LONG).show();
             return false;
+        }
+    }
+
+    private void logMessage(String inputValue) {
+        Message inputMessage = new Message();
+        inputMessage.setMessage(inputValue);
+
+        if (!this.initialRequest) {
+            inputMessage.setId(MessageOwner.CLIENT.getUserID());
+            messageArrayList.add(inputMessage);
+        } else {
+            inputMessage.setId(MessageOwner.INIT_MESSAGE.getUserID());
+            this.initialRequest = false;
         }
     }
 

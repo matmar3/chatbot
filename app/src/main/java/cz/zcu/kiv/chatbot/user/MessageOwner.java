@@ -2,7 +2,7 @@ package cz.zcu.kiv.chatbot.user;
 
 public enum MessageOwner {
 
-    NONE("1"),
+    INIT_MESSAGE("1"),
     CLIENT("100"),
     ASSISTANT("2");
 
