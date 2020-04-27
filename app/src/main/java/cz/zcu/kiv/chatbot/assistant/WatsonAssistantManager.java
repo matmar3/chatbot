@@ -1,5 +1,7 @@
 package cz.zcu.kiv.chatbot.assistant;
 
+import android.util.Log;
+
 import com.ibm.cloud.sdk.core.http.HttpConfigOptions;
 import com.ibm.cloud.sdk.core.security.IamAuthenticator;
 import com.ibm.watson.assistant.v2.Assistant;
@@ -14,6 +16,8 @@ public class WatsonAssistantManager implements AssistantManagerInterface<Assista
 
     @Override
     public Assistant create(String apiKey, String apiUrl, String apiVersionDate) {
+        Log.d(WatsonAssistantManager.class.getSimpleName(), "Creating assistant " + this.toString() + ".");
+
         IamAuthenticator authenticator = new IamAuthenticator(apiKey);
         assistant = new Assistant(apiVersionDate, authenticator);
         assistant.setServiceUrl(apiUrl);

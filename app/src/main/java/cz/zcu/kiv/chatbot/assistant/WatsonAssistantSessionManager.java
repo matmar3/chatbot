@@ -1,5 +1,7 @@
 package cz.zcu.kiv.chatbot.assistant;
 
+import android.util.Log;
+
 import com.ibm.watson.assistant.v2.Assistant;
 import com.ibm.watson.assistant.v2.model.CreateSessionOptions;
 import com.ibm.watson.assistant.v2.model.DeleteSessionOptions;
@@ -12,12 +14,16 @@ public class WatsonAssistantSessionManager implements SessionManagerInterface<Se
 
     private static final String MESSAGE_TYPE = "text";
 
+    private static final String TAG = WatsonAssistantSessionManager.class.getSimpleName();
+
     public WatsonAssistantSessionManager() {
 
     }
 
     @Override
     public SessionResponse createSession(Assistant assistant, String assistantID) {
+        Log.d(TAG, "Creating session " + this.toString() + ".");
+
         CreateSessionOptions options = new CreateSessionOptions
                 .Builder(assistantID).build();
 
@@ -26,6 +32,8 @@ public class WatsonAssistantSessionManager implements SessionManagerInterface<Se
 
     @Override
     public void deleteSession(Assistant assistant, String sessionID, String assistantID) {
+        Log.d(TAG, "Deleting session " + this.toString() + ".");
+
         DeleteSessionOptions options = new DeleteSessionOptions
                 .Builder(assistantID, sessionID).build();
 
@@ -34,6 +42,8 @@ public class WatsonAssistantSessionManager implements SessionManagerInterface<Se
 
     @Override
     public MessageResponse sendMessage(Assistant watsonAssistant, String sessionID, String assistantID, String message) {
+        Log.d(TAG, "Sending message via assistant with ID = " + assistantID + " and session ID =  " + sessionID + ".");
+
         MessageInput input = new MessageInput.Builder()
                 .messageType(MESSAGE_TYPE)
                 .text(message)

@@ -12,12 +12,15 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import cz.zcu.kiv.chatbot.imageloader.PicassoImageGetter;
+import cz.zcu.kiv.chatbot.message.Message;
+import cz.zcu.kiv.chatbot.user.MessageOwner;
+
 
 public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private int SELF = 100;
     private ArrayList<Message> messageArrayList;
-
 
     ChatAdapter(ArrayList<Message> messageArrayList) {
         this.messageArrayList = messageArrayList;
@@ -48,7 +51,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public int getItemViewType(int position) {
         Message message = messageArrayList.get(position);
-        if (message.getId() != null && message.getId().equals("1")) {
+        if (message.getId() != null && message.getId().equals(MessageOwner.CLIENT.getUserID())) {
             return SELF;
         }
 
@@ -58,12 +61,13 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, int position) {
         Message message = messageArrayList.get(position);
+        TextView textView = ((ViewHolder) holder).message;
 
         if (message.getMessage().startsWith("<html>")) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                ((ViewHolder) holder).message.setText(Html.fromHtml(message.getMessage(), Html.FROM_HTML_MODE_COMPACT));
+                textView.setText(Html.fromHtml(message.getMessage(), Html.FROM_HTML_MODE_COMPACT, new PicassoImageGetter(textView), null));
             } else {
-                ((ViewHolder) holder).message.setText(Html.fromHtml(message.getMessage()));
+                textView.setText(Html.fromHtml(message.getMessage(), new PicassoImageGetter(textView), null));
             }
         }
         else {
@@ -86,6 +90,5 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             image = itemView.findViewById(R.id.image);
         }
     }
-
 
 }
