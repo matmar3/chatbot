@@ -10,10 +10,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.sufficientlysecure.htmltextview.HtmlHttpImageGetter;
-import org.sufficientlysecure.htmltextview.HtmlTextView;
-
 import java.util.ArrayList;
+
+import cz.zcu.kiv.chatbot.imageloader.PicassoImageGetter;
 
 
 public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -61,9 +60,14 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, int position) {
         Message message = messageArrayList.get(position);
+        TextView textView = ((ViewHolder) holder).message;
 
         if (message.getMessage().startsWith("<html>")) {
-            ((ViewHolder) holder).message.setHtml(message.getMessage(), new HtmlHttpImageGetter(((ViewHolder) holder).message));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                textView.setText(Html.fromHtml(message.getMessage(), Html.FROM_HTML_MODE_COMPACT, new PicassoImageGetter(textView), null));
+            } else {
+                textView.setText(Html.fromHtml(message.getMessage(), new PicassoImageGetter(textView), null));
+            }
         }
         else {
             ((ViewHolder) holder).message.setText(message.getMessage());
@@ -76,13 +80,14 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        HtmlTextView message;
+        TextView message;
+        ImageView image;
 
         ViewHolder(View view) {
             super(view);
             message = itemView.findViewById(R.id.message);
+            image = itemView.findViewById(R.id.image);
         }
     }
-
 
 }
