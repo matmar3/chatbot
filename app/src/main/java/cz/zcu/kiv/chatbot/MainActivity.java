@@ -9,7 +9,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,22 +16,20 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.ibm.watson.assistant.v2.model.DialogNodeOutputOptionsElement;
-import com.ibm.watson.assistant.v2.model.RuntimeResponseGeneric;
 import com.ibm.watson.assistant.v2.Assistant;
 import com.ibm.watson.assistant.v2.model.MessageResponse;
 import com.ibm.watson.assistant.v2.model.SessionResponse;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 import cz.zcu.kiv.chatbot.assistant.WatsonAssistantManager;
 import cz.zcu.kiv.chatbot.assistant.WatsonAssistantSessionManager;
+import cz.zcu.kiv.chatbot.message.Message;
+import cz.zcu.kiv.chatbot.message.WatsonAssistantResponseHandler;
+import cz.zcu.kiv.chatbot.user.MessageOwner;
 
 public class MainActivity extends AppCompatActivity {
-
-    private static String TAG = "MainActivity";
 
     private RecyclerView recyclerView;
     private EditText inputMessage;
@@ -45,10 +42,12 @@ public class MainActivity extends AppCompatActivity {
 
     private WatsonAssistantManager assistantManager;
     private WatsonAssistantSessionManager sessionManager;
+    private WatsonAssistantResponseHandler responseHandler;
 
     private void createServices() {
         assistantManager = new WatsonAssistantManager();
         sessionManager = new WatsonAssistantSessionManager();
+        responseHandler = new WatsonAssistantResponseHandler();
 
         assistantManager.create(
                 mContext.getString(R.string.assistant_apikey),
@@ -129,12 +128,12 @@ public class MainActivity extends AppCompatActivity {
         if (!this.initialRequest) {
             Message inputMessage = new Message();
             inputMessage.setMessage(inputValue);
-            inputMessage.setId("1");
+            inputMessage.setId(MessageOwner.CLIENT.getUserID());
             messageArrayList.add(inputMessage);
         } else {
             Message inputMessage = new Message();
             inputMessage.setMessage(inputValue);
-            inputMessage.setId("100");
+            inputMessage.setId(MessageOwner.NONE.getUserID());
             this.initialRequest = false;
             Toast.makeText(getApplicationContext(), "Tap on the message for Voice", Toast.LENGTH_LONG).show();
         }
@@ -153,53 +152,20 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     MessageResponse response = sessionManager.sendMessage(watsonAssistant, sessionResponse.getSessionId(), assistantID, inputValue);
-                    Log.i(TAG, "run: " + response);
-                    if (response != null &&
-                            response.getOutput() != null &&
-                            !response.getOutput().getGeneric().isEmpty()) {
 
-                        List<RuntimeResponseGeneric> responses = response.getOutput().getGeneric();
-
-                        for (RuntimeResponseGeneric r : responses) {
-                            Message outMessage;
-                            switch (r.responseType()) {
-                                case "text":
-                                    outMessage = new Message();
-                                    outMessage.setMessage(r.text());
-                                    outMessage.setId("2");
-
-                                    messageArrayList.add(outMessage);
-                                    break;
-
-                                case "option":
-                                    outMessage =new Message();
-                                    String title = r.title();
-                                    StringBuilder optionsOutput = new StringBuilder();
-                                    for (int i = 0; i < r.options().size(); i++) {
-                                        DialogNodeOutputOptionsElement option = r.options().get(i);
-                                        optionsOutput.append(option.getLabel()).append("\n");
-
-                                    }
-                                    outMessage.setMessage(title + "\n" + optionsOutput.toString());
-                                    outMessage.setId("2");
-
-                                    messageArrayList.add(outMessage);
-                                    break;
-                                default:
-                                    Log.e("Error", "Unhandled message type");
-                            }
-                        }
-
+                    if (responseHandler.exists(response)) {
+                        responseHandler.handle(response, messageArrayList);
                         runOnUiThread(new Runnable() {
                             public void run() {
                                 mAdapter.notifyDataSetChanged();
                                 if (mAdapter.getItemCount() > 1) {
-                                    Objects.requireNonNull(recyclerView.getLayoutManager()).smoothScrollToPosition(recyclerView, null, mAdapter.getItemCount() - 1);
-
+                                    Objects.requireNonNull(recyclerView.getLayoutManager())
+                                            .smoothScrollToPosition(recyclerView, null, mAdapter.getItemCount() - 1);
                                 }
 
                             }
                         });
+
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

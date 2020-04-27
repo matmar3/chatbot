@@ -13,13 +13,14 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import cz.zcu.kiv.chatbot.imageloader.PicassoImageGetter;
+import cz.zcu.kiv.chatbot.message.Message;
+import cz.zcu.kiv.chatbot.user.MessageOwner;
 
 
 public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private int SELF = 100;
     private ArrayList<Message> messageArrayList;
-
 
     ChatAdapter(ArrayList<Message> messageArrayList) {
         this.messageArrayList = messageArrayList;
@@ -50,7 +51,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public int getItemViewType(int position) {
         Message message = messageArrayList.get(position);
-        if (message.getId() != null && message.getId().equals("1")) {
+        if (message.getId() != null && message.getId().equals(MessageOwner.CLIENT.getUserID())) {
             return SELF;
         }
 
