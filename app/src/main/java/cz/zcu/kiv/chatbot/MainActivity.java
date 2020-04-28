@@ -26,28 +26,44 @@ import cz.zcu.kiv.chatbot.assistant.WatsonAssistantSessionManager;
 import cz.zcu.kiv.chatbot.connection.InternetConnection;
 import cz.zcu.kiv.chatbot.message.Message;
 import cz.zcu.kiv.chatbot.message.WatsonAssistantResponseHandler;
-import cz.zcu.kiv.chatbot.user.MessageOwner;
+import cz.zcu.kiv.chatbot.message.MessageOwner;
 
+/**
+ * Defines main application activity.
+ *
+ * @author Martin Matas
+ * @version 1.0
+ * created on 2020-22-04
+ */
 public class MainActivity extends AppCompatActivity {
 
+    /*
+     Class variables
+     */
     private RecyclerView recyclerView;
     private EditText inputMessage;
-
     private boolean initialRequest;
     private SessionResponse sessionResponse;
     private Context mContext;
     private ChatAdapter mAdapter;
     private ArrayList<Message> messageArrayList;
 
+    /*
+     References to managers and handlers.
+     */
     private WatsonAssistantManager assistantManager;
     private WatsonAssistantSessionManager sessionManager;
     private WatsonAssistantResponseHandler responseHandler;
 
+    /**
+     * Initializes all necessary services.
+     */
     private void createServices() {
         assistantManager = new WatsonAssistantManager();
         sessionManager = new WatsonAssistantSessionManager();
         responseHandler = new WatsonAssistantResponseHandler();
 
+        // initialize connection with Watson Assistant
         assistantManager.create(
                 mContext.getString(R.string.assistant_apikey),
                 mContext.getString(R.string.assistant_url),
@@ -55,6 +71,10 @@ public class MainActivity extends AppCompatActivity {
         );
     }
 
+    /**
+     * Creates activity and start communication with Watson Assistant.
+     * @param savedInstanceState - saved state
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (InternetConnection.check(getApplicationContext())) {
-                    sendMessage();
+                    startCommunication();
                 }
                 else {
                     Toast.makeText(
@@ -105,9 +125,12 @@ public class MainActivity extends AppCompatActivity {
 
         // Start services and communicator
         createServices();
-        sendMessage();
+        startCommunication();
     }
 
+    /**
+     * See {@link AppCompatActivity} for more details.
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu - adds items to the action bar if it is present.
@@ -115,6 +138,12 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * Defines refresh button in menu.
+     * See {@link AppCompatActivity} for more details.
+     *
+     * @param item - menu item
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.refresh) {
@@ -125,8 +154,10 @@ public class MainActivity extends AppCompatActivity {
         return(super.onOptionsItemSelected(item));
     }
 
-    // Sending a message to Watson Assistant Service
-    private void sendMessage() {
+    /**
+     * Starts communication with Watson Assistant.
+     */
+    private void startCommunication() {
 
         final String inputValue = this.inputMessage.getText().toString().trim();
         logMessage(inputValue);
@@ -134,6 +165,7 @@ public class MainActivity extends AppCompatActivity {
         this.inputMessage.setText("");
         mAdapter.notifyDataSetChanged();
 
+        // thread for handling responses
         Thread thread = new Thread(new Runnable() {
             public void run() {
                 try {
@@ -168,6 +200,10 @@ public class MainActivity extends AppCompatActivity {
         thread.start();
     }
 
+    /**
+     * Log messages into list of messages.
+     * @param inputValue - message
+     */
     private void logMessage(String inputValue) {
         Message inputMessage = new Message();
         inputMessage.setMessage(inputValue);

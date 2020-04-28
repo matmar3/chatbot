@@ -14,7 +14,7 @@ public class Message extends Response implements Serializable {
 
     /**
      * Defines owner of the massage as userID according to owner types
-     * defined in {@link cz.zcu.kiv.chatbot.user.MessageOwner}.
+     * defined in {@link MessageOwner}.
      */
     private String id;
 

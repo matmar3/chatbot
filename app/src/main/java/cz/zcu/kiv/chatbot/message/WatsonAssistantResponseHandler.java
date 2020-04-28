@@ -8,8 +8,6 @@ import com.ibm.watson.assistant.v2.model.RuntimeResponseGeneric;
 
 import java.util.List;
 
-import cz.zcu.kiv.chatbot.user.MessageOwner;
-
 /**
  * Implementation of assistant handler for Watson Assistant.
  *

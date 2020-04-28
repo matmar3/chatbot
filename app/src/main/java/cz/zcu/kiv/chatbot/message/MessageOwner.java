@@ -1,4 +1,4 @@
-package cz.zcu.kiv.chatbot.user;
+package cz.zcu.kiv.chatbot.message;
 
 /**
  * List of possible owners of the message.
