@@ -10,8 +10,18 @@ import java.util.List;
 
 import cz.zcu.kiv.chatbot.user.MessageOwner;
 
+/**
+ * Implementation of assistant handler for Watson Assistant.
+ *
+ * @author Martin Matas
+ * @version 1.0
+ * created on 2020-27-04
+ */
 public class WatsonAssistantResponseHandler implements ResponseHandler<Message> {
 
+    /**
+     * Class tag for logger.
+     */
     private static final String TAG = WatsonAssistantResponseHandler.class.getSimpleName();
 
     @Override

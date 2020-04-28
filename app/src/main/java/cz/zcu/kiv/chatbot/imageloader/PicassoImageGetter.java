@@ -20,17 +20,37 @@ import java.lang.ref.WeakReference;
 /**
  * Create instance of {@link android.text.Html.ImageGetter} and download image from view
  * that holds HTML which contains $lt;img&gt; tag to load.
+ *
+ * @author Martin Matas
+ * @version 1.0
+ * created on 2020-27-04
  */
 public class PicassoImageGetter implements Html.ImageGetter {
 
+    /**
+     * Class tag for logger.
+     */
     private static final String TAG = PicassoImageGetter.class.getSimpleName();
 
+    /**
+     * Reference to text view that holds HTML which contains $lt;img&gt; tag to load.
+     */
     private final TextView mTextView;
 
+    /**
+     * Initialize text view variable.
+     *
+     * @param view - view that holds HTML which contains $lt;img&gt; tag to load
+     */
     public PicassoImageGetter(TextView view) {
         mTextView = view;
     }
 
+    /**
+     * Download image from the internet based on given source.
+     * @param source - absolute URL with image location
+     * @return drawable image
+     */
     @Override
     public Drawable getDrawable(String source) {
         if (TextUtils.isEmpty(source)) {
@@ -65,6 +85,11 @@ public class PicassoImageGetter implements Html.ImageGetter {
             mUrlDrawable = urlDrawable;
         }
 
+        /**
+         * Asynchronous image download.
+         * @param params - image URI
+         * @return - image's bitmap
+         */
         @Override
         protected Bitmap doInBackground(Uri... params) {
             try {
@@ -76,6 +101,10 @@ public class PicassoImageGetter implements Html.ImageGetter {
             }
         }
 
+        /**
+         * Redraw textView with downloaded image.
+         * @param result - downloaded image
+         */
         @Override
         protected void onPostExecute(Bitmap result) {
             if (result == null) {
@@ -105,6 +134,9 @@ public class PicassoImageGetter implements Html.ImageGetter {
 
     }
 
+    /**
+     * Drawable bitmap for image from the internet.
+     */
     private static class URLDrawable extends BitmapDrawable {
 
         private Drawable mDrawable;

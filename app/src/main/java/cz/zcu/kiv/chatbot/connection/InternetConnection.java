@@ -8,8 +8,22 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 
+/**
+ * Utils for internet connection management.
+ *
+ * @author Martin Matas
+ * @version 1.0
+ * created on 2020-28-04
+ */
 public class InternetConnection {
 
+    /**
+     * Method retrieves info about WiFI and mobile data connection and returns True if at least one
+     * of them is connected to the internet.
+     *
+     * @param context - application context
+     * @return - connection status (True - connected, False - disconnected)
+     */
     public static boolean check(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
@@ -26,6 +40,11 @@ public class InternetConnection {
         return false;
     }
 
+    /**
+     * Displays alert dialog that internet connection is not available.
+     *
+     * @param activityContext - context of activity where the dialog shows
+     */
     public static void noConnectionDialog(final AppCompatActivity activityContext) {
         AlertDialog alertDialog = new AlertDialog.Builder(activityContext).create();
         alertDialog.setTitle("No connection");

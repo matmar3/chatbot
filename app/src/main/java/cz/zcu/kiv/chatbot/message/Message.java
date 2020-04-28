@@ -2,9 +2,26 @@ package cz.zcu.kiv.chatbot.message;
 
 import java.io.Serializable;
 
+/**
+ * Watson assistant response wrapper. Message stores owner's response and the owner of
+ * the message for later visualization.
+ *
+ * @author Martin Matas
+ * @version 1.0
+ * created on 2020-22-04
+ */
 public class Message extends Response implements Serializable {
 
-    private String id, message;
+    /**
+     * Defines owner of the massage as userID according to owner types
+     * defined in {@link cz.zcu.kiv.chatbot.user.MessageOwner}.
+     */
+    private String id;
+
+    /**
+     * Owner's response.
+     */
+    private String message;
 
     public Message() {
 
