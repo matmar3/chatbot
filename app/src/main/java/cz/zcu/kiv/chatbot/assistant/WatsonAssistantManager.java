@@ -6,6 +6,13 @@ import com.ibm.cloud.sdk.core.http.HttpConfigOptions;
 import com.ibm.cloud.sdk.core.security.IamAuthenticator;
 import com.ibm.watson.assistant.v2.Assistant;
 
+/**
+ * Implementation for managing WatsonAssistant.
+ *
+ * @author Martin Matas
+ * @version 1.0
+ * created on 2020-27-04
+ */
 public class WatsonAssistantManager implements AssistantManagerInterface<Assistant> {
 
     private Assistant assistant;

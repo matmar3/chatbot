@@ -10,10 +10,23 @@ import com.ibm.watson.assistant.v2.model.MessageOptions;
 import com.ibm.watson.assistant.v2.model.MessageResponse;
 import com.ibm.watson.assistant.v2.model.SessionResponse;
 
+/**
+ * Implementation of session manager for Watson Assistant.
+ *
+ * @author Martin Matas
+ * @version 1.0
+ * created on 2020-27-04
+ */
 public class WatsonAssistantSessionManager implements SessionManagerInterface<SessionResponse, Assistant, MessageResponse> {
 
+    /**
+     * The only type of message that can be send.
+     */
     private static final String MESSAGE_TYPE = "text";
 
+    /**
+     * Class tag for logger.
+     */
     private static final String TAG = WatsonAssistantSessionManager.class.getSimpleName();
 
     public WatsonAssistantSessionManager() {
