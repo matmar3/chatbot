@@ -26,16 +26,14 @@ public class InternetConnection {
         return false;
     }
 
-    public static void noConnectionDialog(AppCompatActivity activityContext) {
-        final AppCompatActivity activity = activityContext;
-
+    public static void noConnectionDialog(final AppCompatActivity activityContext) {
         AlertDialog alertDialog = new AlertDialog.Builder(activityContext).create();
-        alertDialog.setTitle("Info");
+        alertDialog.setTitle("No connection");
         alertDialog.setMessage("Internet not available, check your internet connectivity and try again.");
         alertDialog.setIcon(android.R.drawable.ic_dialog_alert);
         alertDialog.setButton(Dialog.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                activity.finish();
+                activityContext.finish();
             }
         });
 
