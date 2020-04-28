@@ -2,8 +2,6 @@ package cz.zcu.kiv.chatbot;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -25,6 +23,7 @@ import java.util.Objects;
 
 import cz.zcu.kiv.chatbot.assistant.WatsonAssistantManager;
 import cz.zcu.kiv.chatbot.assistant.WatsonAssistantSessionManager;
+import cz.zcu.kiv.chatbot.connection.InternetConnection;
 import cz.zcu.kiv.chatbot.message.Message;
 import cz.zcu.kiv.chatbot.message.WatsonAssistantResponseHandler;
 import cz.zcu.kiv.chatbot.user.MessageOwner;
@@ -89,14 +88,19 @@ public class MainActivity extends AppCompatActivity {
         // Send button configuration
         ImageButton btnSend = findViewById(R.id.btn_send);
         btnSend.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
-                if (checkInternetConnection()) {
+                if (InternetConnection.check(getApplicationContext())) {
                     sendMessage();
                 }
+                else {
+                    Toast.makeText(
+                            getApplicationContext(),
+                            "Internet not available, check your internet connectivity and try again.",
+                            Toast.LENGTH_LONG
+                    ).show();
+                }
             }
-
         });
 
         // Start services and communicator
@@ -162,22 +166,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         thread.start();
-    }
-
-    private boolean checkInternetConnection() {
-        // get Connectivity Manager object to check connection
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
-
-        // Check for network connections
-        if (isConnected) {
-            return true;
-        } else {
-            Toast.makeText(this, "No Internet Connection available ", Toast.LENGTH_LONG).show();
-            return false;
-        }
     }
 
     private void logMessage(String inputValue) {
